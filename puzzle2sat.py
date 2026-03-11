@@ -98,6 +98,24 @@ def Puzzle2SAT(
                 ]
             )
 
+    # B. ~Peg(H, I) ^ Peg(H, I+1) => Jump(X, Y, H, I)
+    # Jumps where either jump[2] == H
+    for jump_index in range(number_of_jumps):
+        for i in range(num_holes):
+            rel_jumps_indices = [
+                k + jump_offset
+                for k, jump in enumerate(possible_jumps)
+                if jump[2] == i and jump[3] == jump_index
+            ]
+            clauses.append(
+                [
+                    peg_offset + i + (jump_index * num_holes),  # index of Peg(H, I)
+                    # index of Peg(H, I+1)
+                    -(peg_offset + i + ((jump_index + 1) * num_holes)),
+                    *rel_jumps_indices,
+                ]
+            )
+
     print(f"atom_indices: {atom_indices}")
 
     print("pegs:")
