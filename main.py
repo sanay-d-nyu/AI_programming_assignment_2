@@ -39,7 +39,7 @@ def Puzzle2SAT(
     # offset of where pegs start in the key of atoms (Jumps and Pegs, jumps first, 1 based index)
     peg_offset = num_possible_jumps + 1
 
-    # Precondition
+    # Precondition clauses
     for i, jump in enumerate(possible_jumps):
         # where the pegs for time i start in the pegs list
         peg_i_idx = jump[3] * num_holes
@@ -59,25 +59,25 @@ def Puzzle2SAT(
             ]
         )
 
-    # Precondition
-    # for i, jump in enumerate(possible_jumps):
-    #     # where the pegs for time i start in the pegs list
-    #     peg_i_idx = jump[3] * num_holes
-    #
-    #     # indices pegs relevant to precondition axiom for this jump
-    #     # Basically, the indices of pegs Peg(A, I), Peg(B, I), and Peg(C, I) in the pegs list
-    #     rel_indices = []
-    #     for j in range(len(jump) - 1):
-    #         rel_indices.append(peg_offset + peg_i_idx + jump[j])
-    #
-    #     # Jump(A, B, C, I) => Peg(A, I) ^ Peg(B, I) ^ ~Peg(C, I) in CNF
-    #     clauses.extend(
-    #         [
-    #             [-(i + 1), rel_indices[0]],
-    #             [-(i + 1), rel_indices[1]],
-    #             [-(i + 1), -rel_indices[2]],
-    #         ]
-    #     )
+    # Casual clauses
+    for i, jump in enumerate(possible_jumps):
+        # where the pegs for time i + 1 start in the pegs list
+        peg_i1_idx = (jump[3] + 1) * num_holes
+
+        # indices pegs relevant to precondition axiom for this jump
+        # Basically, the indices of pegs Peg(A, I), Peg(B, I), and Peg(C, I) in the pegs list
+        rel_indices = []
+        for j in range(len(jump) - 1):
+            rel_indices.append(peg_offset + peg_i1_idx + jump[j])
+
+        # Jump(A, B, C, I) => ~Peg(A, I+1) ^ ~Peg(B, I+1) ^ Peg(C, I) in CNF
+        clauses.extend(
+            [
+                [-(i + 1), -rel_indices[0]],
+                [-(i + 1), -rel_indices[1]],
+                [-(i + 1), rel_indices[2]],
+            ]
+        )
 
     print(f"atom_indices: {atom_indices}")
 
