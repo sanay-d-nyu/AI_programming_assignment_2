@@ -16,8 +16,8 @@ global debug  # Boolean flag for printing trace information
 global strategy  # Boolean flag to choose strategy in choosing atom to split on.
 # True for "clever" strategy, False for just choosing first unbound atom
 
-strategy = True
-debug = True
+strategy = False
+debug = False
 
 
 # superroutine: initializes bindings then calls the recursive DPLL.

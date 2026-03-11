@@ -3,7 +3,12 @@ import numpy as np
 
 def Puzzle2SAT(
     board: list[list[int]], start: list[int], number_of_jumps: int
-) -> tuple[list[list[int]], list[list[int]]]:
+) -> tuple[list[set[int]], list[list[int]]]:
+    """
+    Converts the given board, start, and number_of_jumps args
+    into a clauses (a list of sets of atoms) and jump_atoms (the atoms that
+    represent the possible jumps in this config of the game)
+    """
 
     # Get all possible jumps, plus Jump(0, 0, 0, 0)
     jump_atoms: list[list[int]] = [[0, 0, 0, 0]]
@@ -29,7 +34,6 @@ def Puzzle2SAT(
 
     num_holes = int(len(pegs) / (number_of_jumps + 1))
     num_possible_jumps = int(len(possible_jumps) / (number_of_jumps))
-    atom_indices = [i + 1 for i in range(num_holes + num_possible_jumps)]
 
     # start of possible jumps in the jump_atoms list
     jump_offset = 1
@@ -145,7 +149,7 @@ def Puzzle2SAT(
     #
     # print("pegs:")
     # print_helper(pegs)
-    return (clauses, jump_atoms)
+    return ([set(c) for c in clauses], jump_atoms)
 
 
 def arr_to_string(arr1d):
