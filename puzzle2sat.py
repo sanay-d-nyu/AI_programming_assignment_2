@@ -139,12 +139,12 @@ def Puzzle2SAT(
     start_set = set(start)
     for i in range(num_holes):
         sign: int = -1 if i in start_set else 1
-        clauses.append([sign * peg_offset + i])
+        clauses.append([sign * (peg_offset + i)])
 
-    print(f"atom_indices: {atom_indices}")
-
-    print("pegs:")
-    print_helper(pegs)
+    # print(f"atom_indices: {atom_indices}")
+    #
+    # print("pegs:")
+    # print_helper(pegs)
     return (clauses, jump_atoms)
 
 
