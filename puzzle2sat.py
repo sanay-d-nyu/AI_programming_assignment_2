@@ -116,6 +116,16 @@ def Puzzle2SAT(
                 ]
             )
 
+    # One action at a time: ~(Jump(A, B, C, I) ^ Jump(X, Y, Z, I))
+    for jump_index in range(number_of_jumps):
+        start_idx = jump_index * num_possible_jumps
+        end_idx = (1 + jump_index) * num_possible_jumps
+        for i in range(start_idx, end_idx):
+            invalid_jumps = [
+                [-(i + jump_offset), -(k + jump_offset)] for k in range(i + 1, end_idx)
+            ]
+            clauses.extend(invalid_jumps)
+
     print(f"atom_indices: {atom_indices}")
 
     print("pegs:")
